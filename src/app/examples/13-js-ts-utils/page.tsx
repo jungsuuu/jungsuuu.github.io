@@ -10,98 +10,119 @@ import {
 } from "@codesandbox/sandpack-react";
 import { CodeBlock } from "@/src/components/CodeBlock";
 
-const arrayMethodCode = `// Array 메서드들
-const numbers = [1, 2, 3, 4, 5];
+const arrayMethodCode = `// 실무: 상품 목록 처리
+const products = [
+  { id: 1, name: "노트북", price: 1500000, inStock: true },
+  { id: 2, name: "마우스", price: 45000, inStock: false },
+  { id: 3, name: "키보드", price: 120000, inStock: true },
+  { id: 4, name: "모니터", price: 350000, inStock: true }
+];
 
-// map: 배열의 각 요소를 변환
-const doubled = numbers.map(n => n * 2);
-// [2, 4, 6, 8, 10]
+// map: 상품 정보 변환 (API 응답 포맷팅)
+const productList = products.map(p => ({
+  ...p,
+  discountedPrice: Math.floor(p.price * 0.9) // 10% 할인
+}));
 
-// filter: 조건에 맞는 요소만 선택
-const evens = numbers.filter(n => n % 2 === 0);
-// [2, 4]
+// filter: 재고 있는 상품만 (카테고리 필터)
+const inStockProducts = products.filter(p => p.inStock);
 
-// find: 조건에 맞는 첫 번째 요소 찾기
-const firstEven = numbers.find(n => n % 2 === 0);
-// 2
+// find: 특정 상품 검색
+const laptop = products.find(p => p.name === "노트북");
 
-// reduce: 배열을 하나의 값으로 축약
-const sum = numbers.reduce((acc, n) => acc + n, 0);
-// 15
+// reduce: 총 가격 계산 (장바구니 금액)
+const totalPrice = products.reduce((sum, p) => sum + p.price, 0);
 
 // some/every: 조건 확인
-const hasEven = numbers.some(n => n % 2 === 0); // true
-const allPositive = numbers.every(n => n > 0); // true`;
+const hasOutOfStock = products.some(p => !p.inStock);
+const allAffordable = products.every(p => p.price < 2000000);`;
 
-const stringMethodCode = `// String 메서드들
-const text = "hello world";
+const stringMethodCode = `// 실무: 사용자 입력 검증 및 처리
+const userInput = "  john.doe@example.com  ";
+const searchQuery = "JavaScript,React, TypeScript";
+const phoneNumber = "01012345678";
 
-// split: 문자열을 배열로 변환
-const words = text.split(" ");
-// ["hello", "world"]
+// trim: 입력값 공백 제거 (폼 검증)
+const email = userInput.trim();
 
-// replace: 문자열 치환
-const replaced = text.replace("world", "JS");
-// "hello JS"
+// includes: 특정 문자 포함 여부 (이메일 검증)
+const isValidEmail = email.includes("@");
 
-// slice: 부분 문자열 추출
-const sliced = text.slice(0, 5);
-// "hello"
+// split: 검색어 파싱 (쉼표로 구분된 태그)
+const tags = searchQuery.split(",").map(t => t.trim());
+// ["JavaScript", "React", "TypeScript"]
 
-// includes: 문자 포함 여부 확인
-const hasWorld = text.includes("world"); // true
+// slice: 휴대폰번호 일부 마스킹
+const masked = phoneNumber.slice(0, 3) + "****" + phoneNumber.slice(-4);
+// "010****5678"
 
-// toUpperCase/toLowerCase: 대소문자 변환
-text.toUpperCase(); // "HELLO WORLD"
-text.toLowerCase(); // "hello world"
+// replace: URL 처리 (쿼리스트링 인코딩)
+const url = "https://example.com/search?q=hello world";
+const encodedUrl = url.replace(" ", "%20");
 
-// trim: 공백 제거
-"  hello  ".trim(); // "hello"`;
+// toLowerCase: 대소문자 통일 (검색 시 사용)
+const normalizedSearch = searchQuery.toLowerCase();`;
 
-const objectMethodCode = `// Object 메서드들
-const user = { name: "John", age: 30, email: "john@example.com" };
+const objectMethodCode = `// 실무: API 응답 처리 및 상태 업데이트
+const apiResponse = {
+  id: 1,
+  username: "john_doe",
+  email: "john@example.com",
+  role: "user",
+  createdAt: "2024-01-15"
+};
 
-// Object.keys: 키 배열 가져오기
-Object.keys(user);
-// ["name", "age", "email"]
+const userDefaults = { theme: "light", notifications: true };
+const formErrors = { email: "Invalid format", password: "Too short" };
 
-// Object.values: 값 배열 가져오기
-Object.values(user);
-// ["John", 30, "john@example.com"]
+// Object.keys: 유효성 검사 (에러 필드 확인)
+const hasErrors = Object.keys(formErrors).length > 0;
 
-// Object.entries: [키, 값] 쌍 배열
-Object.entries(user);
-// [["name", "John"], ["age", 30], ["email", "john@example.com"]]
+// Object.entries: 동적 폼 렌더링 (에러 표시)
+const errorList = Object.entries(formErrors);
+// [["email", "Invalid format"], ["password", "Too short"]]
 
-// Object.assign: 객체 병합
-const updated = Object.assign({}, user, { age: 31 });
-// { name: "John", age: 31, email: "john@example.com" }
+// 스프레드 연산자: 상태 업데이트 (리액트)
+const updatedUser = { ...apiResponse, role: "admin" };
 
-// 스프레드 연산자: 객체 복사/병합
-const copy = { ...user };
-const merged = { ...user, age: 31 };`;
+// 여러 객체 병합 (기본값 + 사용자 설정)
+const userSettings = { ...userDefaults, ...{ theme: "dark" } };
+// { theme: "dark", notifications: true }
 
-const destructuringCode = `// 구조분해 (Destructuring)
+// 중첩 객체 업데이트
+const nestedUpdate = {
+  ...apiResponse,
+  profile: { ...apiResponse.profile, bio: "Developer" }
+};`;
 
-// 배열 구조분해
-const [first, second, ...rest] = [1, 2, 3, 4, 5];
-// first = 1, second = 2, rest = [3, 4, 5]
+const destructuringCode = `// 실무: API 응답 처리 및 컴포넌트 Props
 
-// 객체 구조분해
-const { name, age } = { name: "John", age: 30, email: "john@example.com" };
-// name = "John", age = 30
+// API 응답에서 필요한 데이터만 추출
+const apiUser = { id: 1, name: "John", email: "john@example.com", phone: "010-1234-5678" };
+const { name, email } = apiUser;
 
-// 객체 구조분해에서 이름 변경
-const { name: userName, age: userAge } = user;
+// 배열 구조분해: 페이지네이션 처리
+const [currentPage, ...otherPages] = [1, 2, 3, 4, 5];
 
-// 함수 파라미터에서 구조분해
-function greet({ name, age }) {
-  return \`Hello \${name}, you are \${age} years old\`;
+// 기본값 설정: 선택적 필드
+const { name, role = "user", isActive = true } = apiUser;
+
+// 이름 변경: 변수명 충돌 피하기
+const response = { data: { id: 1, name: "Product" } };
+const { data: productData } = response;
+
+// 함수 파라미터에서 구조분해 (리액트 컴포넌트)
+function UserCard({ id, name, email, role = "user" }) {
+  return \`\${name} (\${email}) - \${role}\`;
 }
 
-// 기본값 설정
-const { name, role = "user" } = { name: "John" };
-// role이 없으면 "user" 사용`;
+// 중첩 구조분해: 복잡한 응답 객체
+const user = {
+  id: 1,
+  profile: { name: "John", avatar: "url" },
+  settings: { theme: "dark", notifications: true }
+};
+const { profile: { name }, settings: { theme } } = user;`;
 
 const arrayMethodCss = `* {
   font-family: Arial, sans-serif;
@@ -143,41 +164,59 @@ p {
 const arrayMethodSandpack = `import './App.css';
 
 export default function ArrayDemo() {
-  const users = [
-    { id: 1, name: "Alice", role: "admin" },
-    { id: 2, name: "Bob", role: "user" },
-    { id: 3, name: "Charlie", role: "user" }
+  const products = [
+    { id: 1, name: "노트북", price: 1500000, category: "전자기기", inStock: true },
+    { id: 2, name: "마우스", price: 45000, category: "주변기기", inStock: false },
+    { id: 3, name: "키보드", price: 120000, category: "주변기기", inStock: true },
+    { id: 4, name: "모니터", price: 350000, category: "전자기기", inStock: true }
   ];
 
-  const names = users.map(u => u.name);
-  const admins = users.filter(u => u.role === "admin");
-  const alice = users.find(u => u.name === "Alice");
-  const total = users.reduce((acc) => acc + 1, 0);
+  // map: 가격에 10% 할인 적용
+  const saleProducts = products.map(p => ({
+    ...p,
+    salePrice: Math.floor(p.price * 0.9)
+  }));
+
+  // filter: 재고 있는 상품만
+  const availableProducts = products.filter(p => p.inStock);
+
+  // find: 가장 비싼 상품 찾기
+  const mostExpensive = products.reduce((max, p) => p.price > max.price ? p : max);
+
+  // reduce: 재고 상품의 총 금액
+  const totalInventoryValue = availableProducts.reduce((sum, p) => sum + p.price, 0);
+
+  // some/every: 검증
+  const hasOutOfStock = products.some(p => !p.inStock);
 
   return (
     <div className="container">
-      <h2>📋 Array 메서드 예제</h2>
+      <h2>🛒 쇼핑몰: Array 메서드 활용</h2>
       
       <div className="demo-section">
-        <h4>map() - 이름만 추출</h4>
-        <p><strong>결과:</strong> {names.join(", ")}</p>
-      </div>
-
-      <div className="demo-section">
-        <h4>filter() - Admin 필터링</h4>
-        {admins.map(admin => (
-          <p key={admin.id}>✓ {admin.name}</p>
+        <h4>map() - 할인 상품 생성</h4>
+        {saleProducts.slice(0, 2).map(p => (
+          <p key={p.id}>{p.name}: {p.salePrice.toLocaleString()}원 (원가: {p.price.toLocaleString()}원)</p>
         ))}
       </div>
 
       <div className="demo-section">
-        <h4>find() - 특정 사용자 찾기</h4>
-        <p>찾은 사용자: {alice?.name} (ID: {alice?.id})</p>
+        <h4>filter() - 재고 있는 상품</h4>
+        <p>재고: {availableProducts.length}개</p>
+        {availableProducts.map(p => (
+          <p key={p.id}>✓ {p.name}</p>
+        ))}
       </div>
 
       <div className="demo-section">
-        <h4>reduce() - 배열 길이</h4>
-        <p>총 사용자 수: {total}명</p>
+        <h4>reduce() - 재고 금액 계산</h4>
+        <p>총액: {totalInventoryValue.toLocaleString()}원</p>
+        <p>평균: {Math.floor(totalInventoryValue / availableProducts.length).toLocaleString()}원</p>
+      </div>
+
+      <div className="demo-section">
+        <h4>some() - 품절 상품 확인</h4>
+        <p>품절 상품 있음: {hasOutOfStock ? "🔴 있음" : "🟢 없음"}</p>
       </div>
     </div>
   );
@@ -227,41 +266,58 @@ p {
 const stringMethodSandpack = `import './App.css';
 
 export default function StringDemo() {
-  const email = "hello@example.com";
-  const tags = "react,typescript,javascript";
-  const text = "  hello world  ";
+  // 실무: 회원가입 폼 검증
+  const userEmail = "  john.doe@example.com  ";
+  const searchKeywords = "javascript, react,  typescript";
+  const phoneNumber = "01012345678";
+  const bio = "   Web Developer with 5 years experience   ";
 
-  const [username, domain] = email.split("@");
-  const tagArray = tags.split(",");
-  const hasReact = tags.includes("react");
-  const upper = text.toUpperCase().trim();
+  // trim: 입력값 공백 제거
+  const cleanEmail = userEmail.trim();
+  const cleanBio = bio.trim();
+
+  // split: 검색어 파싱 (쉼표로 구분된 태그)
+  const keywords = searchKeywords.split(",").map(k => k.trim());
+
+  // includes: 유효성 검사
+  const isValidEmail = cleanEmail.includes("@") && cleanEmail.includes(".");
+  const hasJavaScript = keywords.some(k => k.includes("javascript"));
+
+  // slice: 휴대폰번호 마스킹
+  const maskedPhone = phoneNumber.slice(0, 3) + "****" + phoneNumber.slice(-4);
+
+  // replace: 특수문자 제거
+  const cleanedBio = cleanBio.replace(/[^a-zA-Z0-9\\s]/g, "");
+
+  // toLowerCase: 검색 정규화
+  const searchQuery = "React".toLowerCase();
 
   return (
     <div className="container">
-      <h2>📝 String 메서드 예제</h2>
+      <h2>✏️ 회원가입: String 메서드 활용</h2>
       
       <div className="demo-section">
-        <h4>split() - 이메일 분석</h4>
-        <p>전체: {email}</p>
-        <p>사용자명: {username}</p>
-        <p>도메인: {domain}</p>
+        <h4>trim() - 입력값 정제</h4>
+        <p>입력: \\"{userEmail}\\"</p>
+        <p>정제: \\"{cleanEmail}\\"</p>
       </div>
 
       <div className="demo-section">
-        <h4>split() & join() - 태그 변환</h4>
-        <p>원본: {tags}</p>
-        <p>배열로: [{tagArray.map(t => \`"\${t}"\`).join(", ")}]</p>
+        <h4>split() - 검색어 파싱</h4>
+        <p>입력: \\"{searchKeywords}\\"</p>
+        <p>파싱됨: [{keywords.join(", ")}]</p>
       </div>
 
       <div className="demo-section">
-        <h4>includes() - 검색</h4>
-        <p>"react" 포함 여부: {hasReact ? "✅ 있음" : "❌ 없음"}</p>
+        <h4>includes() - 유효성 검사</h4>
+        <p>이메일 유효: {isValidEmail ? "✅ 유효" : "❌ 무효"}</p>
+        <p>JavaScript 포함: {hasJavaScript ? "✅ 있음" : "❌ 없음"}</p>
       </div>
 
       <div className="demo-section">
-        <h4>toUpperCase() & trim()</h4>
-        <p>원본: "{text}"</p>
-        <p>변환: "{upper}"</p>
+        <h4>slice() & replace() - 마스킹</h4>
+        <p>전화번호: {maskedPhone} (마스킹됨)</p>
+        <p>소개: {cleanedBio}</p>
       </div>
     </div>
   );
@@ -293,35 +349,9 @@ export default function JsUtilsPage() {
             1️⃣ Array 메서드
           </h2>
           <p className="text-gray-600 mb-4">
-            배열을 다루는 가장 기본적인 메서드들입니다. map, filter, reduce는 리액트에서도 매우 자주 사용됩니다.
+            실무에서는 API 응답 처리, 필터링, 계산 등에 자주 사용됩니다. 쇼핑몰의 상품 목록을 처리하는 예제를 봐보세요.
           </p>
           <CodeBlock code={arrayMethodCode} language="typescript" />
-        </section>
-
-        {/* Array Interactive Demo */}
-        <section className="mb-12 bg-white rounded-lg shadow-sm p-6">
-          <h3 className="text-xl font-semibold text-gray-900 mb-4">
-            Array 메서드 실습
-          </h3>
-          <div className="rounded-lg overflow-hidden shadow-lg border border-gray-200">
-            <SandpackProvider
-              template="react-ts"
-              files={{
-                "/App.tsx": arrayMethodSandpack,
-                "/App.css": arrayMethodCss,
-              }}
-            >
-              <SandpackLayout>
-                <SandpackCodeEditor
-                  showLineNumbers={true}
-                  showInlineErrors={true}
-                  wrapContent={true}
-                  style={{ height: 500 }}
-                />
-                <SandpackPreview style={{ height: 500 }} />
-              </SandpackLayout>
-            </SandpackProvider>
-          </div>
         </section>
 
         {/* String Methods */}
@@ -330,35 +360,9 @@ export default function JsUtilsPage() {
             2️⃣ String 메서드
           </h2>
           <p className="text-gray-600 mb-4">
-            문자열을 처리하는 메서드들입니다. split, replace, includes는 매일 사용합니다.
+            사용자 입력 검증, 데이터 정제, 마스킹 등에서 매일 마주칩니다. 회원가입 폼 검증 예제를 확인해보세요.
           </p>
           <CodeBlock code={stringMethodCode} language="typescript" />
-        </section>
-
-        {/* String Interactive Demo */}
-        <section className="mb-12 bg-white rounded-lg shadow-sm p-6">
-          <h3 className="text-xl font-semibold text-gray-900 mb-4">
-            String 메서드 실습
-          </h3>
-          <div className="rounded-lg overflow-hidden shadow-lg border border-gray-200">
-            <SandpackProvider
-              template="react-ts"
-              files={{
-                "/App.tsx": stringMethodSandpack,
-                "/App.css": stringMethodCss,
-              }}
-            >
-              <SandpackLayout>
-                <SandpackCodeEditor
-                  showLineNumbers={true}
-                  showInlineErrors={true}
-                  wrapContent={true}
-                  style={{ height: 500 }}
-                />
-                <SandpackPreview style={{ height: 500 }} />
-              </SandpackLayout>
-            </SandpackProvider>
-          </div>
         </section>
 
         {/* Object Methods */}
@@ -367,7 +371,7 @@ export default function JsUtilsPage() {
             3️⃣ Object 메서드 & 스프레드 연산자
           </h2>
           <p className="text-gray-600 mb-4">
-            객체를 다루는 메서드들입니다. 리액트에서 상태를 업데이트할 때도 자주 사용됩니다.
+            API 응답 처리, 리액트 상태 업데이트, 폼 데이터 병합 등에 필수적입니다. 이뮬레이션해서 사용해보세요.
           </p>
           <CodeBlock code={objectMethodCode} language="typescript" />
         </section>
@@ -378,7 +382,7 @@ export default function JsUtilsPage() {
             4️⃣ 구조분해 (Destructuring)
           </h2>
           <p className="text-gray-600 mb-4">
-            배열이나 객체에서 필요한 값을 쉽게 추출하는 문법입니다. 모던 자바스크립트의 필수 문법입니다.
+            리액트 컴포넌트 Props, API 응답 처리, 함수 파라미터에서 자주 사용합니다. 코드를 더 깔끔하고 읽기 쉽게 만들어줍니다.
           </p>
           <CodeBlock code={destructuringCode} language="typescript" />
         </section>

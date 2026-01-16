@@ -223,7 +223,7 @@ function log(level: LogLevel, message: string) {
               />
             </div>
 
-            <div>
+            <div className="col-span-2">
               <h4 className="font-semibold text-gray-900 mb-2">
                 🪝 React async 상태
               </h4>
@@ -252,36 +252,6 @@ const UserCard = ({ userId }: Props) => {
       return <Error error={state.error} />;
   }
 };`}
-              />
-            </div>
-
-            <div>
-              <h4 className="font-semibold text-gray-900 mb-2">
-                🔒 Type Guard
-              </h4>
-              <CodeBlock
-                language="typescript"
-                code={`type Result<T> = 
-  | { ok: true; value: T }
-  | { ok: false; error: string };
-
-// Type Predicate
-function isSuccess<T>(
-  result: Result<T>
-): result is { ok: true; value: T } {
-  return result.ok === true;
-}
-
-// 사용
-function handleResult(result: Result<string>) {
-  if (isSuccess(result)) {
-    // result.value 접근 가능!
-    console.log(result.value.length);
-  } else {
-    // result.error 접근 가능!
-    console.log(result.error);
-  }
-}`}
               />
             </div>
           </div>
@@ -326,39 +296,6 @@ function handleResult(result: Result<string>) {
           </div>
         </div>
 
-        {/* Related Examples */}
-        <div className="mt-16 rounded-lg bg-gray-100 p-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">관련 예제</h2>
-          <div className="grid gap-4 md:grid-cols-3">
-            <Link
-              href="/examples/09-ts-generics"
-              className="rounded-lg bg-white p-4 hover:shadow-md transition-shadow"
-            >
-              <p className="font-semibold text-blue-600">
-                → TypeScript Generics
-              </p>
-              <p className="text-sm text-gray-600 mt-1">제네릭 활용</p>
-            </Link>
-            <Link
-              href="/examples/10-ts-null-safety"
-              className="rounded-lg bg-white p-4 hover:shadow-md transition-shadow"
-            >
-              <p className="font-semibold text-blue-600">
-                → Null/Undefined Safety
-              </p>
-              <p className="text-sm text-gray-600 mt-1">안전한 null 처리</p>
-            </Link>
-            <Link
-              href="/examples/06-react-in-typescript"
-              className="rounded-lg bg-white p-4 hover:shadow-md transition-shadow"
-            >
-              <p className="font-semibold text-blue-600">
-                → React + TypeScript
-              </p>
-              <p className="text-sm text-gray-600 mt-1">실전 활용</p>
-            </Link>
-          </div>
-        </div>
 
         {/* Navigation */}
         <ExampleNavigation currentNumber={11} />

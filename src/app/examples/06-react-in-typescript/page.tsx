@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { ExampleNavigation } from "@/src/components/ExampleNavigation";
+import { CodeBlock } from "@/src/components/CodeBlock";
 import {
   SandpackProvider,
   SandpackLayout,
@@ -326,33 +327,293 @@ export default function ReactTypeScriptPage() {
           </div>
         </div>
 
-        {/* Live Playground */}
-        <div className="mb-12">
+        {/* TypeScript 타입 정의 섹션 */}
+        <div className="mb-12 rounded-lg bg-blue-50 p-8 border border-blue-200">
           <h2 className="text-2xl font-bold text-gray-900 mb-6">
-            Live Playground
+            📋 TypeScript: 타입 정의 (한 번만 작성)
           </h2>
-          <div className="rounded-lg overflow-hidden shadow-lg border border-gray-200">
-            <SandpackProvider
-              template="react-ts"
-              files={{
-                "/App.tsx": reactTypeScriptCode,
-                "/App.css": reactCssCode,
-              }}
-            >
-              <SandpackLayout>
-                <SandpackCodeEditor
-                  showLineNumbers={true}
-                  showInlineErrors={true}
-                  wrapContent={true}
-                  style={{ height: 700 }}
-                />
-                <SandpackPreview style={{ height: 700 }} />
-              </SandpackLayout>
-            </SandpackProvider>
+          <p className="text-gray-700 mb-6">
+            TypeScript는 사용하기 전에 타입을 먼저 정의합니다. 하지만 이 정의는 **한 번만** 작성하면 이후 모든 곳에서 재사용됩니다.
+          </p>
+
+          <CodeBlock
+            language="typescript"
+            code={`// 📋 API 응답 타입 정의 (한 번만 정의)
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  age: number;
+}
+
+interface ApiResponse<T> {
+  success: boolean;
+  data: T;
+  error?: string;
+}`}
+          />
+        </div>
+
+        {/* Axios Comparison */}
+        <div className="mb-12 rounded-lg bg-indigo-50 p-8 border border-indigo-200">
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">
+            실무: JavaScript vs TypeScript (API 호출)
+          </h2>
+          <p className="text-gray-700 mb-6">
+            위에서 정의한 타입을 사용하여 API를 호출합니다. 실제 코드 로직은 거의 동일합니다!
+          </p>
+
+          <div className="grid gap-6 md:grid-cols-2">
+            {/* JavaScript Version */}
+            <div>
+              <div className="bg-red-100 border border-red-300 rounded-lg px-3 py-2 mb-3">
+                <h4 className="font-semibold text-red-900">❌ JavaScript</h4>
+              </div>
+              <CodeBlock
+                language="javascript"
+                code={`// 📡 API 호출 (타입 정의 없음)
+async function fetchUser(id) {
+  const response = await axios.get(
+    \`/api/users/\${id}\`
+  );
+  return response.data;
+}
+
+// 사용
+const user = await fetchUser(1);
+console.log(user.name);
+// 🚨 위험! user가 뭔지 모름
+
+console.log(user.email.toLowerCase());
+// 🚨 런타임 에러 가능!`}
+              />
+            </div>
+
+            {/* TypeScript Version */}
+            <div>
+              <div className="bg-green-100 border border-green-300 rounded-lg px-3 py-2 mb-3">
+                <h4 className="font-semibold text-green-900">✅ TypeScript</h4>
+              </div>
+              <CodeBlock
+                language="typescript"
+                code={`// 📡 API 호출 (위의 타입 재사용)
+async function fetchUser(
+  id: number
+): Promise<User> {
+  const response = await axios.get<ApiResponse<User>>(
+    \`/api/users/\${id}\`
+  );
+  return response.data.data;
+}
+
+// 사용
+const user = await fetchUser(1);
+console.log(user.name);
+// ✅ 안전! User 타입으로 보장
+
+console.log(user.email.toLowerCase());
+// ✅ 타입 보장, IDE 지원`}
+              />
+            </div>
           </div>
         </div>
 
-        {/* Key Points */}
+        {/* Issues and Benefits */}
+        <div className="grid gap-6 md:grid-cols-2 mb-12">
+          <div className="rounded-lg bg-red-50 p-6 border border-red-200">
+            <h3 className="text-lg font-semibold text-gray-900 mb-3">
+              ⚠️ JavaScript의 문제점
+            </h3>
+            <ul className="space-y-2 text-gray-700 text-sm">
+              <li>
+                <strong>타입 불명확</strong>: response.data가 뭔지 모름
+              </li>
+              <li>
+                <strong>런타임 에러</strong>: 존재하지 않는 속성 접근
+              </li>
+              <li>
+                <strong>IDE 지원 부족</strong>: 자동완성 불가능
+              </li>
+              <li>
+                <strong>리팩토링 위험</strong>: API 구조 변경 시 미감지
+              </li>
+              <li>
+                <strong>배열/객체 혼동</strong>: 타입 불명확
+              </li>
+              <li>
+                <strong>null/undefined 처리</strong>: 명시되지 않음
+              </li>
+              <li>
+                <strong>디버깅 어려움</strong>: 런타임에야 발견
+              </li>
+              <li>
+                <strong>팀 협업 어려움</strong>: API 구조를 문서로 설명 필요
+              </li>
+            </ul>
+          </div>
+
+          <div className="rounded-lg bg-green-50 p-6 border border-green-200">
+            <h3 className="text-lg font-semibold text-gray-900 mb-3">
+              ✅ TypeScript의 장점
+            </h3>
+            <ul className="space-y-2 text-gray-700 text-sm">
+              <li>
+                <strong>타입 명확</strong>: User 타입으로 정확히 정의
+              </li>
+              <li>
+                <strong>컴파일 타임 검사</strong>: 배포 전에 발견
+              </li>
+              <li>
+                <strong>IDE 자동완성</strong>: user. 입력 시 모든 속성 표시
+              </li>
+              <li>
+                <strong>안전한 리팩토링</strong>: 타입 변경 시 즉시 감지
+              </li>
+              <li>
+                <strong>배열/객체 구분</strong>: User[] vs User 명확
+              </li>
+              <li>
+                <strong>명시적 null 처리</strong>: User | null로 표현
+              </li>
+              <li>
+                <strong>쉬운 디버깅</strong>: 타입 에러로 신속히 파악
+              </li>
+              <li>
+                <strong>팀 협업 용이</strong>: 타입이 문서 역할
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Practical Example */}
+        <div className="rounded-lg bg-blue-50 p-8 border border-blue-200 mb-12">
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">
+            🪝 React Hook으로 데이터 가져오기 (동일한 로직)
+          </h2>
+          <p className="text-gray-700 mb-6">
+            Hook의 로직은 JavaScript와 TypeScript가 거의 동일합니다. 다만 타입만 추가됩니다.
+          </p>
+          
+          <div className="grid gap-6 md:grid-cols-2">
+            <div>
+              <h4 className="font-semibold text-gray-900 mb-2">
+                ❌ JavaScript Hook
+              </h4>
+              <CodeBlock
+                language="javascript"
+                code={`function useUser(id) {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetch = async () => {
+      try {
+        setLoading(true);
+        const res = await axios.get(
+          \`/api/users/\${id}\`
+        );
+        setUser(res.data);
+      } catch (err) {
+        setError(err.message);
+      }
+    };
+    fetch();
+  }, [id]);
+
+  return { user, loading, error };
+}`}
+              />
+            </div>
+
+            <div>
+              <h4 className="font-semibold text-gray-900 mb-2">
+                ✅ TypeScript Hook
+              </h4>
+              <CodeBlock
+                language="typescript"
+                code={`function useUser(id: number): {
+  user: User | null;
+  loading: boolean;
+  error: Error | null;
+} {
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+
+  useEffect(() => {
+    const fetch = async () => {
+      try {
+        setLoading(true);
+        const res = await axios.get<ApiResponse<User>>(
+          \`/api/users/\${id}\`
+        );
+        setUser(res.data.data);
+      } catch (err) {
+        setError(err as Error);
+      }
+    };
+    fetch();
+  }, [id]);
+
+  return { user, loading, error };
+}`}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Hook 사용 비교 */}
+        <div className="rounded-lg bg-yellow-50 p-8 border border-yellow-200 mb-12">
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">
+            🎯 Hook 사용 방식 비교
+          </h2>
+
+          <div className="grid gap-6 md:grid-cols-2">
+            <div>
+              <h4 className="font-semibold text-gray-900 mb-2">
+                ❌ JavaScript - 불확실함
+              </h4>
+              <CodeBlock
+                language="javascript"
+                code={`const { user, loading } = useUser(1);
+
+{loading ? (
+  <div>Loading...</div>
+) : (
+  <div>
+    {/* 🚨 user.name이 있나? */}
+    <p>{user?.name}</p>
+    <p>{user?.email}</p>
+    {/* 🚨 IDE가 도와줄 수 없음 */}
+  </div>
+)}`}
+              />
+            </div>
+
+            <div>
+              <h4 className="font-semibold text-gray-900 mb-2">
+                ✅ TypeScript - 명확함
+              </h4>
+              <CodeBlock
+                language="typescript"
+                code={`const { user, loading } = useUser(1);
+
+{loading ? (
+  <div>Loading...</div>
+) : user ? (
+  <div>
+    {/* ✅ user.name이 확실함 */}
+    <p>{user.name}</p>
+    <p>{user.email}</p>
+    {/* ✅ IDE 자동완성 지원 */}
+  </div>
+) : null}`}
+              />
+            </div>
+          </div>
+        </div>
+
         <div className="grid gap-6 md:grid-cols-2 mb-8">
           <div className="rounded-lg bg-green-50 p-6 border border-green-200">
             <h3 className="text-lg font-semibold text-gray-900 mb-3">
@@ -419,8 +680,9 @@ export default function ReactTypeScriptPage() {
               <h4 className="font-semibold text-gray-900 mb-2">
                 🎯 Props 타입 정의
               </h4>
-              <code className="bg-white px-3 py-2 rounded text-sm block overflow-x-auto">
-                {`interface Props {
+              <CodeBlock
+                language="typescript"
+                code={`interface Props {
   label: string;
   value?: number;
   onChange?: (val: number) => void;
@@ -429,15 +691,16 @@ export default function ReactTypeScriptPage() {
 const MyComponent: FC<Props> = ({ label, value }) => {
   return <div>{label}: {value}</div>;
 };`}
-              </code>
+              />
             </div>
 
             <div>
               <h4 className="font-semibold text-gray-900 mb-2">
                 📊 State 타입 정의
               </h4>
-              <code className="bg-white px-3 py-2 rounded text-sm block overflow-x-auto">
-                {`interface User {
+              <CodeBlock
+                language="typescript"
+                code={`interface User {
   id: number;
   name: string;
   email: string;
@@ -445,15 +708,16 @@ const MyComponent: FC<Props> = ({ label, value }) => {
 
 const [users, setUsers] = 
   useState<User[]>([]);`}
-              </code>
+              />
             </div>
 
             <div>
               <h4 className="font-semibold text-gray-900 mb-2">
                 🖱️ Event 핸들러 타입
               </h4>
-              <code className="bg-white px-3 py-2 rounded text-sm block overflow-x-auto">
-                {`const handleChange = (
+              <CodeBlock
+                language="typescript"
+                code={`const handleChange = (
   e: React.ChangeEvent<HTMLInputElement>
 ) => {
   console.log(e.target.value);
@@ -464,15 +728,16 @@ const handleClick = (
 ) => {
   console.log('clicked');
 };`}
-              </code>
+              />
             </div>
 
             <div>
               <h4 className="font-semibold text-gray-900 mb-2">
                 🔄 제네릭 (Generics)
               </h4>
-              <code className="bg-white px-3 py-2 rounded text-sm block overflow-x-auto">
-                {`interface ApiResponse<T> {
+              <CodeBlock
+                language="typescript"
+                code={`interface ApiResponse<T> {
   data: T;
   status: number;
   message: string;
@@ -480,7 +745,7 @@ const handleClick = (
 
 const [response, setResponse] = 
   useState<ApiResponse<User> | null>(null);`}
-              </code>
+              />
             </div>
           </div>
         </div>
@@ -493,8 +758,9 @@ const [response, setResponse] =
           <div className="grid gap-6 md:grid-cols-2">
             <div>
               <h4 className="font-semibold text-gray-900 mb-2">📝 Interface</h4>
-              <code className="bg-white px-3 py-2 rounded text-sm block overflow-x-auto">
-                {`// 확장 가능
+              <CodeBlock
+                language="typescript"
+                code={`// 확장 가능
 interface User {
   id: number;
   name: string;
@@ -512,13 +778,14 @@ interface Config {
   timeout: number;
 }
 // { apiUrl, timeout } 자동 병합`}
-              </code>
+              />
             </div>
 
             <div>
               <h4 className="font-semibold text-gray-900 mb-2">🏷️ Type</h4>
-              <code className="bg-white px-3 py-2 rounded text-sm block overflow-x-auto">
-                {`// 유니온 타입
+              <CodeBlock
+                language="typescript"
+                code={`// 유니온 타입
 type Status = 'pending' | 'done' | 'error';
 
 // 조건부 타입
@@ -531,7 +798,7 @@ type Config = {
   apiUrl: string;
   timeout: number;
 };`}
-              </code>
+              />
             </div>
           </div>
         </div>

@@ -21,7 +21,7 @@ export const createUserSchema = z
     password: passwordSchema,
     confirmPassword: z.string(),
     roleId: z.string().min(1, "역할을 선택하세요."),
-    isActive: z.boolean().default(true),
+    isActive: z.boolean(),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "비밀번호가 일치하지 않습니다.",

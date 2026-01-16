@@ -1,154 +1,8 @@
 "use client";
 
-import Link from "next/link";
-import { ExampleNavigation } from "@/src/components/ExampleNavigation";
 import { CodeBlock } from "@/src/components/CodeBlock";
-import {
-  SandpackProvider,
-  SandpackLayout,
-  SandpackCodeEditor,
-  SandpackPreview,
-} from "@codesandbox/sandpack-react";
-
-const typeSafetyCode = `import { useState } from 'react';
-
-// ❌ JavaScript - 타입이 없어서 런타임 에러 발생 가능
-const BadUserList = () => {
-  const [users, setUsers] = useState([]);
-  
-  const renderUser = (user) => {
-    // user.name이 없으면 undefined 에러!
-    return <div>{user.name.toUpperCase()}</div>;
-  };
-  
-  return <div>{users.map(renderUser)}</div>;
-};
-
-// ✅ TypeScript - 타입 안전성으로 에러를 사전에 방지
-interface User {
-  id: number;
-  name: string;
-  email: string;
-  age: number;
-}
-
-const GoodUserList = () => {
-  const [users, setUsers] = useState<User[]>([]);
-  
-  const renderUser = (user: User) => {
-    // IDE가 자동완성을 제공하고, 잘못된 속성은 에러!
-    return <div>{user.name.toUpperCase()}</div>;
-  };
-  
-  return <div>{users.map(renderUser)}</div>;
-};
-
-export default function Demo() {
-  const [selectedTab, setSelectedTab] = useState('typescript');
-  
-  return (
-    <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
-      <h1>✅ TypeScript: 타입 안전성 (Type Safety)</h1>
-      
-      <div style={{ marginBottom: '20px' }}>
-        <p style={{ fontSize: '16px', color: '#555' }}>
-          TypeScript는 정적 타입을 제공하여 컴파일 시점에 에러를 발견합니다.
-        </p>
-      </div>
-
-      <div style={{
-        marginBottom: '20px',
-        padding: '16px',
-        backgroundColor: '#fef3c7',
-        borderLeft: '4px solid #f59e0b',
-        borderRadius: '4px'
-      }}>
-        <strong>📊 장점:</strong>
-        <ul style={{ marginTop: '10px', marginLeft: '20px' }}>
-          <li>존재하지 않는 속성 접근 방지</li>
-          <li>잘못된 타입의 값 할당 방지</li>
-          <li>IDE 자동완성 지원</li>
-          <li>런타임 에러 사전 방지</li>
-          <li>코드 리팩토링 시 안전성 보장</li>
-        </ul>
-      </div>
-
-      <div style={{ marginBottom: '20px' }}>
-        <h2 style={{ fontSize: '18px', marginBottom: '10px' }}>예제 비교:</h2>
-        
-        <div style={{ marginBottom: '20px' }}>
-          <h3 style={{ color: '#dc2626', marginBottom: '10px' }}>❌ JavaScript 문제점:</h3>
-          <pre style={{
-            backgroundColor: '#fee2e2',
-            padding: '12px',
-            borderRadius: '4px',
-            overflow: 'auto',
-            border: '1px solid #fca5a5'
-          }}>
-{<code style={{ fontSize: '14px', color: '#7f1d1d' }}>
-{String.raw\`
-const user = { id: 1 };
-
-// 런타임에만 에러 발생!
-console.log(user.name.toUpperCase()); 
-// TypeError: Cannot read property 'toUpperCase' of undefined
-
-// IDE가 경고하지 않음 - 개발 시 발견 불가
-user.email = 123; // 이런 실수도 쉽게 발생
-\`}
-</code>}
-          </pre>
-        </div>
-
-        <div style={{ marginBottom: '20px' }}>
-          <h3 style={{ color: '#059669', marginBottom: '10px' }}>✅ TypeScript 해결책:</h3>
-          <pre style={{
-            backgroundColor: '#dcfce7',
-            padding: '12px',
-            borderRadius: '4px',
-            overflow: 'auto',
-            border: '1px solid #86efac'
-          }}>
-{<code style={{ fontSize: '14px', color: '#15803d' }}>
-{String.raw\`
-interface User {
-  id: number;
-  name: string;
-  email: string;
-}
-
-const user: User = { id: 1 };
-
-// ❌ 컴파일 에러! (IDE에서 즉시 표시)
-console.log(user.name.toUpperCase());
-
-// ❌ 타입 에러! (IDE에서 경고)
-user.email = 123;
-
-// ✅ 올바른 코드만 실행됨
-const validUser: User = {
-  id: 1,
-  name: 'John',
-  email: 'john@example.com'
-};
-\`}
-</code>}
-          </pre>
-        </div>
-      </div>
-
-      <div style={{
-        backgroundColor: '#e0f2fe',
-        padding: '16px',
-        borderRadius: '4px',
-        borderLeft: '4px solid #0284c7'
-      }}>
-        <strong>💡 핵심:</strong> TypeScript는 에러를 개발 시점에 발견하므로 배포 후 버그 발생 위험을 크게 줄입니다.
-      </div>
-    </div>
-  );
-}
-`;
+import { ExampleNavigation } from "@/src/components/ExampleNavigation";
+import Link from "next/link";
 
 export default function TypeSafetyPage() {
   return (
@@ -198,29 +52,6 @@ export default function TypeSafetyPage() {
           </div>
         </div>
 
-        {/* Live Playground */}
-        <div className="mb-12">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">
-            Live Playground
-          </h2>
-          <div className="rounded-lg overflow-hidden shadow-lg border border-gray-200">
-            <SandpackProvider
-              template="react-ts"
-              files={{
-                "/App.tsx": typeSafetyCode,
-              }}
-            >
-              <SandpackLayout>
-                <SandpackCodeEditor
-                  showLineNumbers
-                  wrapContent
-                  style={{ height: "700px" }}
-                />
-                <SandpackPreview style={{ height: "700px" }} />
-              </SandpackLayout>
-            </SandpackProvider>
-          </div>
-        </div>
 
         {/* Key Points */}
         <div className="grid gap-6 md:grid-cols-2 mb-8">
@@ -279,10 +110,214 @@ export default function TypeSafetyPage() {
           </div>
         </div>
 
-        {/* Common Patterns */}
-        <div className="rounded-lg bg-purple-50 p-8 border border-purple-200 mb-8">
+        {/* ANY Type Danger */}
+        <div className="rounded-lg bg-red-50 p-8 border border-red-200 mb-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">⚠️ any 타입의 위험성</h2>
+          <div className="space-y-6">
+            <div>
+              <h4 className="font-semibold text-gray-900 mb-2">
+                🚨 any는 타입 체크를 무효화합니다
+              </h4>
+              <CodeBlock
+                language="typescript"
+                code={`// ❌ 위험한 코드: any 사용
+const users: any[] = [];
+
+// 컴파일 타임: 모두 통과 ✓
+users.push("John");           // 문자열 추가
+users.push({ name: 'Alice' }); // 객체 추가
+users.push(123);              // 숫자 추가
+users.push(null);             // null 추가
+users.push(undefined);        // undefined 추가
+
+// 런타임에서 에러 발생!
+users.forEach(user => {
+  console.log(user.name);    // ❌ Runtime Error!
+  // 문자열에는 name 속성이 없음
+  // 숫자에는 name 속성이 없음
+  // null에는 속성이 없음
+});
+
+// ✅ 올바른 코드: 타입 정의
+interface User {
+  id: number;
+  name: string;
+  email: string;
+}
+
+const users: User[] = [];
+
+// 컴파일 타임: 오류 감지! ❌
+users.push("John");           // Error: not assignable to User
+users.push(123);              // Error: not assignable to User
+users.push({ name: 'Alice' }); // Error: missing id and email
+users.push(null);             // Error: not assignable to User
+
+// 올바른 것만 추가 가능
+users.push({
+  id: 1,
+  name: 'John',
+  email: 'john@example.com'  // ✅ OK
+});`}
+              />
+            </div>
+
+            <div>
+              <h4 className="font-semibold text-gray-900 mb-2">
+                💥 any로 인한 실제 버그
+              </h4>
+              <CodeBlock
+                language="typescript"
+                code={`// ❌ 실무 예제: API 응답 처리
+async function fetchUsers() {
+  const response = await fetch('/api/users');
+  const data: any = await response.json();
+  
+  return data.users; // undefined일 수 있음
+}
+
+async function processUsers() {
+  const users = await fetchUsers();
+  
+  // 런타임 에러!
+  users.forEach(user => {
+    console.log(user.name); // user가 undefined면 에러
+    console.log(user.email.toLowerCase()); // email이 없으면 에러
+  });
+}
+
+// ✅ 타입 안전한 코드
+interface User {
+  id: number;
+  name: string;
+  email: string;
+}
+
+interface ApiResponse {
+  users: User[];
+  total: number;
+}
+
+async function fetchUsers(): Promise<User[]> {
+  const response = await fetch('/api/users');
+  const data: ApiResponse = await response.json();
+  
+  return data.users; // 명확한 타입
+}
+
+async function processUsers() {
+  const users = await fetchUsers(); // User[]로 보장
+  
+  // 안전한 접근
+  users.forEach(user => {
+    console.log(user.name); // ✅ string
+    console.log(user.email.toLowerCase()); // ✅ 안전
+  });
+}`}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Practical Patterns */}
+        <div className="rounded-lg bg-blue-50 p-8 border border-blue-200 mb-8">
           <h2 className="text-2xl font-bold text-gray-900 mb-6">
             타입 안전성 패턴
+          </h2>
+          <div className="space-y-6">
+            <div>
+              <h4 className="font-semibold text-gray-900 mb-2">
+                🔌 API 응답 타입 정의
+              </h4>
+              <CodeBlock
+                language="typescript"
+                code={`// API 응답 구조 정의
+interface ApiResponse<T> {
+  success: boolean;
+  data: T;
+  error?: string;
+  timestamp: number;
+}
+
+// 도메인 모델 정의
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  role: 'admin' | 'user' | 'guest';
+  createdAt: string;
+}
+
+// 사용할 때는 제네릭으로 명확하게
+async function getUser(id: number): Promise<User> {
+  const response = await fetch(\`/api/users/\${id}\`);
+  const result: ApiResponse<User> = await response.json();
+  
+  if (!result.success || !result.data) {
+    throw new Error(result.error || 'Failed to fetch user');
+  }
+  
+  return result.data; // User 타입 보장
+}
+
+// 사용
+const user = await getUser(1);
+console.log(user.name); // ✅ name은 string
+console.log(user.role); // ✅ role은 'admin' | 'user' | 'guest'
+console.log(user.invalid); // ❌ Error: 속성이 없음`}
+              />
+            </div>
+
+            <div>
+              <h4 className="font-semibold text-gray-900 mb-2">
+                🎯 컴포넌트 Props 검증
+              </h4>
+              <CodeBlock
+                language="typescript"
+                code={`// ❌ any Props - 타입 체크 불가
+const Button = (props: any) => {
+  return <button onClick={props.onClick}>{props.children}</button>;
+};
+
+// 런타임 에러 발생 가능
+<Button onClick="not a function" children={123} />;
+
+// ✅ 타입 정의된 Props
+interface ButtonProps {
+  onClick: () => void; // 함수만 가능
+  children: React.ReactNode;
+  disabled?: boolean;
+  variant?: 'primary' | 'secondary'; // 특정 값만 가능
+}
+
+const Button = (props: ButtonProps) => {
+  return (
+    <button
+      onClick={props.onClick}
+      disabled={props.disabled}
+      className={\`btn btn-\${props.variant}\`}
+    >
+      {props.children}
+    </button>
+  );
+};
+
+// 컴파일 타임에 에러 감지
+<Button onClick="not a function" />; // ❌ Error
+<Button onClick={() => {}} children={123} />; // ❌ Error
+<Button onClick={() => {}} variant="invalid" />; // ❌ Error
+
+// 올바른 사용
+<Button onClick={() => {}} children="Click me" variant="primary" />; // ✅ OK`}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Comparison Patterns */}
+        <div className="rounded-lg bg-purple-50 p-8 border border-purple-200 mb-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">
+            기초 패턴: any vs 타입 정의
           </h2>
           <div className="grid gap-6 md:grid-cols-2">
             <div>
@@ -295,51 +330,56 @@ export default function TypeSafetyPage() {
   id: number;
   name: string;
   email: string;
-  age: number;
 }
 
 const user: User = {
   id: 1,
   name: 'John',
-  email: 'john@example.com',
-  age: 30
-};`}
-              />
-            </div>
-
-            <div>
-              <h4 className="font-semibold text-gray-900 mb-2">
-                🔍 속성 접근 검증
-              </h4>
-              <CodeBlock
-                language="typescript"
-                code={`// ❌ TypeScript 오류!
-user.phone; // Property does not exist
-
-// ✅ 올바른 속성 접근
-user.email; // string
-user.age;   // number
-
-// ❌ 타입 불일치 오류!
-user.age = "30"; // Type 'string' is not assignable to type 'number'`}
-              />
-            </div>
-
-            <div>
-              <h4 className="font-semibold text-gray-900 mb-2">
-                📝 함수 파라미터 타입
-              </h4>
-              <CodeBlock
-                language="typescript"
-                code={`// ❌ JavaScript - 타입 불명확
-const renderUser = (user) => {
-  return user.name.toUpperCase();
+  email: 'john@example.com'
 };
 
-// ✅ TypeScript - 명확한 타입
-const renderUser = (user: User): string => {
-  return user.name.toUpperCase();
-};`}
+// ✅ 자동완성 지원
+user.id;    // number
+user.name;  // string
+user.email; // string`}
+              />
+            </div>
+
+            <div>
+              <h4 className="font-semibold text-gray-900 mb-2">
+                🔍 타입 검증
+              </h4>
+              <CodeBlock
+                language="typescript"
+                code={`// ❌ 타입 미스매치 감지
+user.id = "123";     // Error
+user.age = 30;       // Error
+user.email = true;   // Error
+
+// ✅ 올바른 할당
+user.id = 1;
+user.name = 'Alice';
+user.email = 'alice@example.com';`}
+              />
+            </div>
+
+            <div>
+              <h4 className="font-semibold text-gray-900 mb-2">
+                📝 함수 타입 안전성
+              </h4>
+              <CodeBlock
+                language="typescript"
+                code={`const renderUser = (user: User): string => {
+  return \`\${user.name} (\${user.email})\`;
+};
+
+// ✅ 올바른 호출
+renderUser(user);
+
+// ❌ 타입 오류 감지
+renderUser("invalid");
+renderUser({ name: 'John' });
+renderUser(null);`}
               />
             </div>
 
@@ -349,19 +389,24 @@ const renderUser = (user: User): string => {
               </h4>
               <CodeBlock
                 language="typescript"
-                code={`// ❌ any[] - 타입 미보호
-const users: any[] = [];
-users.push("string"); // 잘못된 타입 추가 가능
+                code={`const users: User[] = [];
 
-// ✅ User[] - 타입 보호
-const users: User[] = [];
-users.push({ id: 1, name: 'John' }); // 에러!
+// ✅ 올바른 추가
 users.push({
   id: 1,
   name: 'John',
-  email: 'john@example.com',
-  age: 30
-}); // ✅ OK`}
+  email: 'john@example.com'
+});
+
+// ❌ 타입 오류 감지
+users.push("string");
+users.push(123);
+users.push({ name: 'Alice' });
+
+// 안전한 반복
+users.forEach(u => {
+  console.log(u.name); // ✅ string
+});`}
               />
             </div>
           </div>
@@ -369,39 +414,30 @@ users.push({
 
         {/* Best Practices */}
         <div className="rounded-lg bg-gray-50 p-8 border border-gray-200 mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">모범 사례</h2>
-          <div className="grid gap-6 md:grid-cols-3">
-            <div>
-              <h4 className="font-semibold text-gray-900 mb-3">✅ Do</h4>
-              <ul className="space-y-2 text-gray-700">
-                <li>✓ 명확한 타입 정의</li>
-                <li>✓ 함수의 반환 타입 명시</li>
-                <li>✓ 제네릭 활용</li>
-                <li>✓ union 타입으로 유효한 값만 허용</li>
-                <li>✓ readonly 키워드로 불변성</li>
-              </ul>
-            </div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">실무 Best Practices</h2>
+          <div className="space-y-6">
+            <div className="grid gap-6 md:grid-cols-2">
+              <div>
+                <h4 className="font-semibold text-gray-900 mb-3">✅ 이렇게 하세요</h4>
+                <ul className="space-y-2 text-gray-700">
+                  <li>✓ <strong>명시적 타입 정의</strong>: 모든 변수와 함수에 타입 선언</li>
+                  <li>✓ <strong>제네릭 활용</strong>: 재사용 가능한 타입 작성</li>
+                  <li>✓ <strong>Union 타입</strong>: 유효한 값만 허용</li>
+                  <li>✓ <strong>Type Guard</strong>: 런타임 타입 검증</li>
+                  <li>✓ <strong>Readonly 사용</strong>: 불변성 보장</li>
+                </ul>
+              </div>
 
-            <div>
-              <h4 className="font-semibold text-gray-900 mb-3">❌ Don't</h4>
-              <ul className="space-y-2 text-gray-700">
-                <li>✗ any 타입 남용</li>
-                <li>✗ 타입 체크 없는 단언 (as)</li>
-                <li>✗ unknown 타입 무시</li>
-                <li>✗ null/undefined 처리 생략</li>
-                <li>✗ 복잡한 타입 과용</li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="font-semibold text-gray-900 mb-3">💡 Tips</h4>
-              <ul className="space-y-2 text-gray-700">
-                <li>📌 strict 모드 활성화</li>
-                <li>📌 타입 추론 활용</li>
-                <li>📌 유틸리티 타입 활용</li>
-                <li>📌 타입 가드 구현</li>
-                <li>📌 테스트로 검증</li>
-              </ul>
+              <div>
+                <h4 className="font-semibold text-gray-900 mb-3">❌ 이렇게 하지 마세요</h4>
+                <ul className="space-y-2 text-gray-700">
+                  <li>✗ <strong>any 타입</strong>: 모든 타입 체크 무효화</li>
+                  <li>✗ <strong>타입 단언 (as)</strong>: 컴파일러 무시하기</li>
+                  <li>✗ <strong>타입 체크 생략</strong>: null/undefined 처리 부족</li>
+                  <li>✗ <strong>복잡한 타입</strong>: 읽기 어려운 타입 정의</li>
+                  <li>✗ <strong>일관성 부족</strong>: 타입 정의 규칙 부재</li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>

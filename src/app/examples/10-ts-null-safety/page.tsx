@@ -332,40 +332,6 @@ function getAgeWithDefault(user: User): number {
           </div>
         </div>
 
-        {/* Related Examples */}
-        <div className="mt-16 rounded-lg bg-gray-100 p-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">관련 예제</h2>
-          <div className="grid gap-4 md:grid-cols-3">
-            <Link
-              href="/examples/08-ts-interfaces"
-              className="rounded-lg bg-white p-4 hover:shadow-md transition-shadow"
-            >
-              <p className="font-semibold text-blue-600">
-                → TypeScript Interfaces
-              </p>
-              <p className="text-sm text-gray-600 mt-1">타입 정의 기본</p>
-            </Link>
-            <Link
-              href="/examples/09-ts-generics"
-              className="rounded-lg bg-white p-4 hover:shadow-md transition-shadow"
-            >
-              <p className="font-semibold text-blue-600">
-                → TypeScript Generics
-              </p>
-              <p className="text-sm text-gray-600 mt-1">제네릭 활용</p>
-            </Link>
-            <Link
-              href="/examples/11-ts-union-types"
-              className="rounded-lg bg-white p-4 hover:shadow-md transition-shadow"
-            >
-              <p className="font-semibold text-blue-600">→ Union 타입</p>
-              <p className="text-sm text-gray-600 mt-1">
-                Union 타입과 Type Guard
-              </p>
-            </Link>
-          </div>
-        </div>
-
         {/* Navigation */}
         <ExampleNavigation currentNumber={10} />
       </div>
